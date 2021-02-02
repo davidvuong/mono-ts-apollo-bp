@@ -6,7 +6,7 @@ build/
 local.env.list
 
 # WebAppSPA specific ignores
-apps/app/src/styles/tailwind.css
+packages/app/src/styles/tailwind.css
 
 /coverage
 
