@@ -1,0 +1,25 @@
+scalar JSON
+scalar DateTime
+scalar Date
+
+type Identity {
+  id: ID!
+  name: String!
+  dob: Date!
+  description: String
+  createdAt: DateTime!
+}
+
+input CreateIdentityInput {
+  name: String!
+  dob: Date!
+  description: String
+}
+
+type Query {
+  identities: [Identity!]!
+}
+
+type Mutation {
+  createIdentity(input: CreateIdentityInput!): Identity!
+}

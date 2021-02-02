@@ -1,0 +1,18 @@
+overwrite: true
+schema: 'src/**/*.graphql'
+generates:
+  ../../packages/shared/src/graphql.generated.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-resolvers'
+    config:
+      scalars:
+        DateTime: Date
+        Date: Date
+        Time: string
+        JSON: '{ [key: string]: any }'
+      declarationKind: 'interface'
+      avoidOptionals: false
+      namingConvention:
+        enumValues: keep
+      maybeValue: T | undefined

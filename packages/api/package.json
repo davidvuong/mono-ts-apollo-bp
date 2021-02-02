@@ -1,0 +1,70 @@
+{
+  "name": "@monots/api",
+  "version": "1.0.0",
+  "author": "David Vuong <david.vuong@voltron.studio>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./build/src/index.js",
+    "start:watch": "nodemon",
+    "test": "LOG_LEVEL=error jest",
+    "clean": "rm -rf ./build",
+    "clean:node": "rm -rf ./node_modules && yarn clean",
+    "build": "yarn clean && tsc -p tsconfig.build.json && cp -r ./graphql ./build/graphql",
+    "codegen": "VERBOSE=1 DEBUG=1 graphql-codegen --config codegen.yml",
+    "db:migrate": "python3 ./scripts/db_run_migration.py --use-default"
+  },
+  "dependencies": {
+    "@monots/shared": "1.0.0",
+    "apollo-server-express": "2.19.0",
+    "compression": "1.7.4",
+    "cors": "2.8.5",
+    "date-fns": "2.16.1",
+    "express": "4.17.1",
+    "express-jwt": "6.0.0",
+    "faker": "5.1.0",
+    "graphql": "15.4.0",
+    "jwks-rsa": "1.12.1",
+    "lodash": "4.17.20",
+    "morgan": "1.10.0",
+    "pg": "8.5.1",
+    "sql-template-strings": "2.2.2",
+    "uuid": "8.3.1",
+    "winston": "3.3.3"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.19.1",
+    "@graphql-codegen/typescript": "1.17.11",
+    "@graphql-codegen/typescript-resolvers": "1.17.10",
+    "@types/axios": "0.14.0",
+    "@types/compression": "1.7.0",
+    "@types/date-fns": "2.6.0",
+    "@types/express": "4.17.9",
+    "@types/express-jwt": "6.0.0",
+    "@types/faker": "5.1.4",
+    "@types/jest": "26.0.15",
+    "@types/lodash": "4.14.165",
+    "@types/morgan": "1.9.2",
+    "@types/node": "14.14.7",
+    "@types/pg": "7.14.6",
+    "@types/uuid": "8.3.0",
+    "jest": "26.6.0",
+    "ts-jest": "26.4.4"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src",
+      "../../packages/shared/src"
+    ],
+    "events": {
+      "restart": "kill $(lsof -t -i:4000) > /dev/null 2>&1"
+    },
+    "exec": "node -r ts-node/register ./src",
+    "ext": "ts"
+  }
+}
