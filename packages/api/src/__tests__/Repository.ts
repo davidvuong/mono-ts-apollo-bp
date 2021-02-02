@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import crypto from 'crypto';
 import { truncate } from 'lodash';
-import pg, { PoolClient } from 'pg';
+import pg from 'pg';
 import { v4 } from 'uuid';
 import { Utils } from '@monots/shared';
 import { Repository } from '../repository';
@@ -48,9 +48,6 @@ const query = (config: DatabaseConfigWithConn, q: string, params: QueryParam[] =
       return err ? reject(err) : resolve(res);
     });
   });
-
-const transact = <A>(repository: Repository, f: (t: PoolClient) => Promise<A>): Promise<A> =>
-  repository.transact(t => f(t));
 
 const migrateDatabase = (config: DatabaseConfigWithConn): Promise<string> =>
   new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 import { Identity, Utils } from '@monots/shared';
 
-export const transformDbIdentity = (row: any): Identity =>
+export const transformDbIdentity = (row: Record<string, any>): Identity =>
   Utils.removeUndefinedOrNullFields({
     id: row.id,
     name: row.name,

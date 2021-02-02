@@ -1,12 +1,12 @@
 import { readFileSync } from 'fs';
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
-import expressJwt from 'express-jwt';
-import jwks from 'jwks-rsa';
+// import expressJwt from 'express-jwt';
+// import jwks from 'jwks-rsa';
 import compression from 'compression';
 import morgan from 'morgan';
 import { constants as httpConstants } from 'http2';
-import { DecodeJsonError, Joi, validateSchema } from '@monots/shared';
+import { DecodeJsonError } from '@monots/shared';
 import path from 'path';
 import cors from 'cors';
 import { handleHttpError } from './common/errors';
@@ -53,7 +53,7 @@ const main = async (): Promise<void> => {
   app.use(
     // NOTE: the log format tied to stream consumer expected format specifically ':status|'
     morgan(':status|:method :url - status=:status - len=:res[content-length] - ms=:response-time', {
-      skip: (req: express.Request, res: express.Response): boolean => req.originalUrl === '/health',
+      skip: (req: express.Request, _res: express.Response): boolean => req.originalUrl === '/health',
       stream: new MorganStreamWritable(),
     }),
   );
@@ -65,6 +65,7 @@ const main = async (): Promise<void> => {
   const resolvers = loadResolvers(identityService);
   const apolloServer = new ApolloServer({
     typeDefs: readFileSync(`${__dirname}/schema.graphql`).toString('utf-8'),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolvers: resolvers as any,
     tracing: config.api.isTracingEnbled,
     cacheControl: {
@@ -75,15 +76,15 @@ const main = async (): Promise<void> => {
 
   // Configure static serving of React SPA.
   const WebAppPath = path.join(__dirname, '../../..', 'webapp', 'build');
-  const WebAppStaticRouter = (req: express.Request, res: express.Response) =>
+  const WebAppStaticRouter = (_req: express.Request, res: express.Response) =>
     res.sendFile(path.join(WebAppPath, 'index.html'));
   app.use(express.static(WebAppPath));
   app.get('/', WebAppStaticRouter);
   app.get('/a/*', WebAppStaticRouter);
 
-  app.use('/', (req, res) => res.status(httpConstants.HTTP_STATUS_NOT_FOUND).json({ error: 'Route not found' }));
+  app.use('/', (_req, res) => res.status(httpConstants.HTTP_STATUS_NOT_FOUND).json({ error: 'Route not found' }));
 
-  app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) => {
     if (err instanceof SyntaxError) {
       handleHttpError(new DecodeJsonError(err.toString()), req, res);
     } else {

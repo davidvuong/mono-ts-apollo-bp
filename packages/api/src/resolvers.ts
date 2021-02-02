@@ -12,10 +12,10 @@ const validateInput = async <A>(input: A, validationFn: (payload: A) => Promise<
 
 export const loadResolvers = (identityService: IdentityService): Resolvers => ({
   Query: {
-    identities: (root, args, context) => identityService.getAll(),
+    identities: (_root, _args, _context) => identityService.getAll(),
   },
   Mutation: {
-    createIdentity: async (root, args, context) =>
+    createIdentity: async (_root, args, _context) =>
       identityService.create(await validateInput(args.input, validateCreateIdentityInput)),
   },
 });

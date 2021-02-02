@@ -1,5 +1,9 @@
 # mono-ts-apollo-bp
 
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Code style: airbnb](https://img.shields.io/badge/code%20style-airbnb-blue.svg)](https://github.com/airbnb/javascript)
+
 **Welcome to mono-ts-apollo-bp!**
 
 This repository is a sample boilerplate project (titled `monots`) composed of a FE (via [CRA](https://github.com/facebook/create-react-app)) and [Apollo GraphQL](https://www.apollographql.com/docs/apollo-server/) BE, managed via [Lerna](https://github.com/lerna/lerna) and [TypeScript](https://www.typescriptlang.org/) throughout.

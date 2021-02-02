@@ -15,7 +15,8 @@
     ]
   },
   "scripts": {
-    "clean:node": "rm -rf ./node_modules"
+    "clean:node": "rm -rf ./node_modules",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@types/yargs": "15.0.12",

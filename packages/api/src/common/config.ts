@@ -36,7 +36,9 @@ export interface DatabaseConfigWithConn extends DatabaseSharedConfig {
 
 export type DatabaseConfig = DatabaseConfigWithUri | DatabaseConfigWithConn;
 
-export function isDatabaseConnectionUri(config: DatabaseConfig): config is DatabaseConfigWithUri {
+export function isDatabaseConnectionUri(
+  config: Partial<DatabaseConfigWithUri & DatabaseConfigWithConn>,
+): config is DatabaseConfigWithUri {
   return (config as DatabaseConfigWithUri).connectionUri !== undefined;
 }
 
@@ -105,6 +107,7 @@ export const getDatabaseConfig = (env: NodeJS.ProcessEnv): DatabaseConfig => {
     poolIdleTimeout: Joi.number().positive().required(),
     statementTimeout: Joi.number().positive().required(),
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (isDatabaseConnectionUri(config as any)) {
     DatabaseConfigSchema = DatabaseConfigSchema.keys({
       connectionUri: Joi.string().required(),

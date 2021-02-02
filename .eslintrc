@@ -1,0 +1,65 @@
+{
+  "extends": [
+    "airbnb-base",
+    "eslint-config-prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json", "./packages/**/tsconfig.build.json", "./packages/**/tsconfig.json"],
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "settings": {
+    "react": {
+      "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React to use
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      },
+      "node": {
+        "extensions": [".js", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src"]
+      }
+    }
+  },
+  "rules": {
+    // @see: https://stackoverflow.com/questions/63818415/react-was-used-before-it-was-defined/64024916#64024916
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "import/no-extraneous-dependencies": [2],
+    "import/prefer-default-export": [0],
+    "@typescript-eslint/indent": [0],
+    "max-classes-per-file": [0],
+    "max-len": ["error", { "code": 120, "ignoreTemplateLiterals": true, "ignoreStrings": true }],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    // @see: https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-shadow.md
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "no-continue": "off",
+    "arrow-parens": [2, "as-needed"],
+    "no-useless-constructor": "off",
+    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
+    // @see: https://github.com/yannickcr/eslint-plugin-react/issues/2353
+    "react/prop-types": "off"
+  },
+  "ignorePatterns": ["**/build/**/*", "**/migrations/**/*", "*.generated.ts"],
+  "env": {
+    "node": true,
+    "jest": true
+  }
+}
