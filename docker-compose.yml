@@ -19,22 +19,20 @@ services:
       - postgres
     ports:
       - 4000:4000
-  # app:
-  #   image: monots/app
-  #   working_dir: /root/app/packages/app
-  #   command: "yarn start"
-  #   volumes:
-  #     - .:/root/app
-  #     - /root/app/node_modules/
-  #     - /root/app/packages/api/node_modules/
-  #     - /root/app/packages/app/node_modules/
-  #     - /root/app/packages/shared/node_modules/
-  #   env_file:
-  #     - ./packages/app/local.env.list
-  #   depends_on:
-  #     - api
-  #   ports:
-  #     - 3000:3000
+  app:
+    image: monots/app
+    working_dir: /root/app/packages/app
+    command: 'yarn start'
+    volumes:
+      - .:/root/app
+      - /root/app/node_modules/
+      - /root/app/packages/api/node_modules/
+      - /root/app/packages/app/node_modules/
+      - /root/app/packages/shared/node_modules/
+    depends_on:
+      - api
+    ports:
+      - 3000:3000
   postgres:
     image: 'postgres:13'
     ports:

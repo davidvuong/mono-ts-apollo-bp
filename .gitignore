@@ -6,4 +6,17 @@ build/
 local.env.list
 
 # WebAppSPA specific ignores
-apps/app/src/assets/styles.css
+apps/app/src/styles/tailwind.css
+
+/coverage
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
