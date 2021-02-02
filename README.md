@@ -8,7 +8,7 @@
 
 This repository is a sample boilerplate project (titled `monots`) composed of a FE (via [CRA](https://github.com/facebook/create-react-app)) and [Apollo GraphQL](https://www.apollographql.com/docs/apollo-server/) BE, managed via [Lerna](https://github.com/lerna/lerna) and [TypeScript](https://www.typescriptlang.org/) throughout.
 
-The sample project sits within a [Docker](https://www.docker.com/) container and locally orchtrated using [docker-compose](https://docs.docker.com/compose/). A 3rd package stores shared utility functions and type definitions between the FE and BE. This project uses PostgreSQL as the persistence layer and [Auth0](https://auth0.com/) as the 3rd party for authentication.
+The sample project sits within a [Docker](https://www.docker.com/) container and locally orchestrated using [docker-compose](https://docs.docker.com/compose/). A 3rd package stores shared utility functions and type definitions between the FE and BE. This project uses PostgreSQL as the persistence layer and [Auth0](https://auth0.com/) as the 3rd party for authentication.
 
 Digging into the technicals a bit further: [prettier](https://prettier.io/) and [ESLint](https://eslint.org/) are used for linting and analysis, [jest](https://jestjs.io/) for unit tests/coverage, and [TailwindCSS](https://tailwindcss.com/) for styles/themeing.
 
