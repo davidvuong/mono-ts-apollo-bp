@@ -1,21 +1,22 @@
 import { exec } from 'child_process';
 import crypto from 'crypto';
 import { truncate } from 'lodash';
-import pg from 'pg';
+import pg, { PoolClient } from 'pg';
 import { v4 } from 'uuid';
 import { Utils } from '@monots/shared';
+import { promisify } from 'util';
 import { Repository } from '../repository';
 import { QueryParam } from '../typed/QueryParam';
 import { DatabaseConfigWithConn } from '../common/config';
 
-// Private
-
-const DATABASE_TEMPLATE_NAME = 'test_template';
+// Private Common
 
 const genDatabaseName = (): string =>
   truncate(`db_checksum${crypto.createHash('md5').update(v4()).digest('hex')}`, { length: 48 });
 
-const getDefaultDatabaseConfig = (options?: Partial<DatabaseConfigWithConn>): DatabaseConfigWithConn => ({
+// Public Common
+
+export const getDefaultDatabaseConfig = (options?: Partial<DatabaseConfigWithConn>): DatabaseConfigWithConn => ({
   host: 'localhost',
   port: 5432,
   name: genDatabaseName(),
@@ -28,10 +29,23 @@ const getDefaultDatabaseConfig = (options?: Partial<DatabaseConfigWithConn>): Da
   ...options,
 });
 
-const getPostgresDatabaseConfig = (): DatabaseConfigWithConn => ({
+export const getPostgresDatabaseConfig = (): DatabaseConfigWithConn => ({
   ...getDefaultDatabaseConfig(),
   name: 'postgres',
 });
+
+export const migrateDatabase = (config: DatabaseConfigWithConn): Promise<{ stdout: string; stderr: string }> =>
+  promisify(exec)(`
+    flyway migrate \
+      -user=${config.username} \
+      -password=${config.password} \
+      -url=jdbc:postgresql://${config.host}:${config.port}/${config.name} \
+      -locations=filesystem:${__dirname}/../../migrations
+  `);
+
+// Private
+
+const DATABASE_TEMPLATE_NAME = 'test_template';
 
 const query = (config: DatabaseConfigWithConn, q: string, params: QueryParam[] = []): Promise<pg.QueryResult> =>
   new Promise((resolve, reject) => {
@@ -49,18 +63,8 @@ const query = (config: DatabaseConfigWithConn, q: string, params: QueryParam[] =
     });
   });
 
-const migrateDatabase = (config: DatabaseConfigWithConn): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const done = (err: Error, stdout: string): void => (err ? reject(err) : resolve(stdout));
-    const cmd = `
-      flyway migrate \
-        -user=${config.username} \
-        -password=${config.password} \
-        -url=jdbc:postgresql://${config.host}:${config.port}/${config.name} \
-        -locations=filesystem:${__dirname}/../../../migrations
-    `;
-    exec(cmd, done);
-  });
+const transact = <A>(repository: Repository, f: (t: PoolClient) => Promise<A>): Promise<A> =>
+  repository.transact(t => f(t));
 
 const createDatabase = async (dbName: string): Promise<void> => {
   const config = getPostgresDatabaseConfig();

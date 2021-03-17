@@ -11,7 +11,7 @@
     "clean:node": "rm -rf ./node_modules && yarn clean",
     "build": "yarn clean && tsc -p tsconfig.build.json && cp -r ./graphql ./build/graphql",
     "codegen": "VERBOSE=1 DEBUG=1 graphql-codegen --config codegen.yml",
-    "db:migrate": "python3 ./scripts/db_run_migration.py --use-default"
+    "db:migrate": "ts-node ./scripts/db_run_migration.ts"
   },
   "dependencies": {
     "@monots/shared": "1.0.0",
