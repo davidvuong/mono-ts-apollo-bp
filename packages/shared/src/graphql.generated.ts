@@ -9,33 +9,24 @@ export interface Scalars {
   Boolean: boolean;
   Int: number;
   Float: number;
-  JSON: { [key: string]: any };
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: Date;
-  Date: Date;
-}
-
-
-
-
-export interface Identity {
-  __typename?: 'Identity';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  dob: Scalars['Date'];
-  description?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-}
-
-export interface CreateIdentityInput {
-  name: Scalars['String'];
-  dob: Scalars['Date'];
-  description?: Maybe<Scalars['String']>;
 }
 
 export interface Query {
   __typename?: 'Query';
   identities: Array<Identity>;
 }
+
+export interface Identity {
+  __typename?: 'Identity';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  dob: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+}
+
 
 export interface Mutation {
   __typename?: 'Mutation';
@@ -44,7 +35,13 @@ export interface Mutation {
 
 
 export interface MutationCreateIdentityArgs {
-  input: CreateIdentityInput;
+  data: IdentityCreateInput;
+}
+
+export interface IdentityCreateInput {
+  name: Scalars['String'];
+  dob: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
 }
 
 
@@ -125,67 +122,53 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  JSON: ResolverTypeWrapper<Scalars['JSON']>;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-  Date: ResolverTypeWrapper<Scalars['Date']>;
+  Query: ResolverTypeWrapper<{}>;
   Identity: ResolverTypeWrapper<Identity>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  CreateIdentityInput: CreateIdentityInput;
-  Query: ResolverTypeWrapper<{}>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Mutation: ResolverTypeWrapper<{}>;
+  IdentityCreateInput: IdentityCreateInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  JSON: Scalars['JSON'];
-  DateTime: Scalars['DateTime'];
-  Date: Scalars['Date'];
+  Query: {};
   Identity: Identity;
   ID: Scalars['ID'];
   String: Scalars['String'];
-  CreateIdentityInput: CreateIdentityInput;
-  Query: {};
+  DateTime: Scalars['DateTime'];
   Mutation: {};
+  IdentityCreateInput: IdentityCreateInput;
   Boolean: Scalars['Boolean'];
-};
-
-export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
-  name: 'JSON';
-}
-
-export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
-  name: 'DateTime';
-}
-
-export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
-  name: 'Date';
-}
-
-export type IdentityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Identity'] = ResolversParentTypes['Identity']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  dob?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
-  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   identities?: Resolver<Array<ResolversTypes['Identity']>, ParentType, ContextType>;
 };
 
+export type IdentityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Identity'] = ResolversParentTypes['Identity']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  dob?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+  name: 'DateTime';
+}
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createIdentity?: Resolver<ResolversTypes['Identity'], ParentType, ContextType, RequireFields<MutationCreateIdentityArgs, 'input'>>;
+  createIdentity?: Resolver<ResolversTypes['Identity'], ParentType, ContextType, RequireFields<MutationCreateIdentityArgs, 'data'>>;
 };
 
 export type Resolvers<ContextType = any> = {
-  JSON?: GraphQLScalarType;
-  DateTime?: GraphQLScalarType;
-  Date?: GraphQLScalarType;
-  Identity?: IdentityResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Identity?: IdentityResolvers<ContextType>;
+  DateTime?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
 };
 

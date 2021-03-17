@@ -24,13 +24,25 @@ Install dependencies on your host machine, allowing VSCode or otherwise to pick 
 yarn
 ```
 
-_Configure environment variables for `api`, renaming `example.env.list` to `local.env.list`._
-
-Spin up `docker-compose` to start the sample React app, Apollo GraphQL API, and PostgreSQL database.
+Compile CSS for the FE app:
 
 ```bash
-yarn db:migrate
+lerna run build:css
 ```
+
+_Configure environment variables for `api`, cp `example.env.list` to `local.env.list`._
+
+```bash
+cp ./packages/api/example.env.list ./packages/api/local.env.list
+```
+
+Start local development, starting all services and dependencies:
+
+```bash
+docker-compose up
+```
+
+To start the sample React app, Apollo GraphQL API, and PostgreSQL database.
 
 ## Database Migrations
 
@@ -43,6 +55,12 @@ Vxxx__<name>.sql
 # For instance,
 V002__Create_accounts_relation.sql
 V003__Add_indexes_to_accounts.sql
+```
+
+Database migrations need to be executed before the application can run:
+
+```bash
+yarn db:migrate
 ```
 
 Read more about [flyway here](https://flywaydb.org/).

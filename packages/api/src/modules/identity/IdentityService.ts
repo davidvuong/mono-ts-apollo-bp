@@ -1,13 +1,16 @@
-import { CreateIdentityInput, Identity } from '@monots/shared';
 import { PoolClient } from 'pg';
+import { Service, Inject } from 'typedi';
 import { v4 } from 'uuid';
-import { Repository } from '../repository';
-import { transformDbIdentity } from '../transformers';
+import { Repository } from '../../repository';
+import { transformDbIdentity } from './IdentityTransformers';
+import { Identity } from './typed/Identity';
+import { IdentityCreateInput } from './typed/IdentityCreateInput';
 
+@Service()
 export class IdentityService {
-  constructor(private readonly repository: Repository) {}
+  constructor(@Inject('repository') private readonly repository: Repository) {}
 
-  create = (args: CreateIdentityInput, transaction?: PoolClient): Promise<Identity> =>
+  create = (args: IdentityCreateInput, transaction?: PoolClient): Promise<Identity> =>
     this.repository.create(
       {
         tableName: 'identities',

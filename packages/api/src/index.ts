@@ -1,10 +1,12 @@
-import { readFileSync } from 'fs';
+import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
+import { Container } from 'typedi';
 // import expressJwt from 'express-jwt';
 // import jwks from 'jwks-rsa';
 import compression from 'compression';
 import morgan from 'morgan';
+import { buildSchema } from 'type-graphql';
 import { constants as httpConstants } from 'http2';
 import { DecodeJsonError } from '@monots/shared';
 import path from 'path';
@@ -12,9 +14,8 @@ import cors from 'cors';
 import { handleHttpError } from './common/errors';
 import { logger, MorganStreamWritable } from './common/logger';
 import { loadConfig } from './common/config';
-import { loadResolvers } from './resolvers';
 import { Repository } from './repository';
-import { IdentityService } from './services/identity';
+import { IdentityResolver } from './modules/identity/IdentityResolver';
 
 const main = async (): Promise<void> => {
   const config = loadConfig(process.env);
@@ -60,13 +61,16 @@ const main = async (): Promise<void> => {
 
   // Services & Repository
   const repository = await Repository.loadRepository(config.database);
-  const identityService = new IdentityService(repository);
 
-  const resolvers = loadResolvers(identityService);
+  // Explicitly inject the Repository into a global container.
+  Container.set('repository', repository);
+
+  const schema = await buildSchema({
+    resolvers: [IdentityResolver] as any,
+    container: Container,
+  });
   const apolloServer = new ApolloServer({
-    typeDefs: readFileSync(`${__dirname}/schema.graphql`).toString('utf-8'),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    resolvers: resolvers as any,
+    schema,
     tracing: config.api.isTracingEnbled,
     cacheControl: {
       defaultMaxAge: 0,
